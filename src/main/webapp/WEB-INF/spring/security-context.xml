@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<b:beans xmlns="http://www.springframework.org/schema/security"
+		 xmlns:b="http://www.springframework.org/schema/beans"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+
+
+	<!-- 확장자를 이용해 패턴을 걸때는 /**/*.해당 확장자 로 할 것(ant pattern) -->
+	<!-- url pattern은 구체적인 url을 먼저 설정하고 덜 구체적인 url 순으로 설정, -->
+	<!-- spring security는 위에서 부터 순차적으로 패턴을 만족하는지 검사함 -->
+	<!-- <http pattern="/**/*.js" security="none" /> -->
+	<!-- 
+	<http auto-config="true" use-expressions="false">
+		<intercept-url pattern="/admin" access="ROLE_ADMIN" />
+		<intercept-url pattern="/user" access="ROLE_USER" />	
+		<intercept-url pattern="/**" access="ROLE_ANONYMOUS,ROLE_USER,ROLE_ADMIN" /> -->
+	
+	<http auto-config="true" use-expressions="true">	<!-- spring el을 사용하여 작성하는 것이 편하다 -->
+		<intercept-url pattern="/admin" access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/user" access="hasRole('ROLE_USER')" />
+		<intercept-url pattern="/login" access="isAnonymous()" />
+		<intercept-url pattern="/**" access="permitAll" />
+		
+		<!-- custom 로그인 페이지 지정 -->
+		<!-- username-parameter 값을 줘서 아이디값을 입력하는 input태그의 name 속성을 j_username으로 사용하지 않아도 된다(임의로 name지정 가능). 패스워드도 마찬가지  -->
+		<!-- 로그인 성공 시 무조건 default target으로 보내려면  always-use-default-target="true"으로 속성을 추가하면 된다 -->
+		<form-login 
+				username-parameter="loginId" 
+				password-parameter="loginPw"
+				login-page="/login"
+				default-target-url="/"
+				authentication-failure-url="/login?fail=true"	/>
+		
+		<csrf />
+	</http>
+	
+	
+	<authentication-manager>
+		<authentication-provider>
+			<user-service>
+				<user name="user" password="user" authorities="ROLE_USER" />
+				<user name="admin" password="admin" authorities="ROLE_ADMIN" />
+			</user-service>
+		</authentication-provider>
+	</authentication-manager>
+	
+	
+</b:beans>
+
