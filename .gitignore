@@ -1,7 +1,7 @@
 # Created by https://www.gitignore.io/api/windows,java,eclipse
 
 pom.properties
-
+root-context.xml
 
 ### Eclipse ###
 
