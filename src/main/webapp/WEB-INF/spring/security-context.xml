@@ -24,10 +24,12 @@
 		
 		<!-- custom 로그인 페이지 지정 -->
 		<!-- username-parameter 값을 줘서 아이디값을 입력하는 input태그의 name 속성을 j_username으로 사용하지 않아도 된다(임의로 name지정 가능). 패스워드도 마찬가지  -->
-		<!-- 로그인 성공 시 무조건 default target으로 보내려면  always-use-default-target="true"으로 속성을 추가하면 된다 -->
+		<!-- 로그인 성공 시 강제로 default-target-url 값으로 보내려면  always-use-default-target="true"으로 속성을 추가하면 된다. 
+				default값은 false 인데 그 상황은 로그인이  성공했을 시 권한이 필요했던 페이지로 이동한다(원래 이동 하려던 페이지로 이동). -->
 		<form-login 
 				username-parameter="loginId" 
 				password-parameter="loginPw"
+				login-processing-url="/loginCheck"
 				login-page="/login"
 				default-target-url="/"
 				authentication-failure-url="/login?fail=true"	/>
