@@ -1,6 +1,24 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+
+<%@ page import="org.springframework.security.core.context.SecurityContextHolder" %>
+<%@ page import="org.springframework.security.core.Authentication" %>
+<%@ page import="com.berlizz.domain.MemberInfo" %>
+<%
+	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	
+	Object principal = auth.getPrincipal();	// 인증 실패 시 anonymousUser란 문자열이 있는 String객체 리턴, 인증 성공 시 작성한 MemberInfo객체 리턴, 둘 다 수용하기 위해 Object객체가 리턴됨
+	
+	String name = "";
+	
+	if(principal != null && principal instanceof MemberInfo) {
+		name = ((MemberInfo)principal).getName();
+	}
+	
+%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>

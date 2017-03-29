@@ -24,7 +24,8 @@
 		
 		<!-- custom 로그인 페이지 지정 -->
 		<!-- username-parameter 값을 줘서 아이디값을 입력하는 input태그의 name 속성을 j_username으로 사용하지 않아도 된다(임의로 name지정 가능). 패스워드도 마찬가지  -->
-		<!-- 로그인 성공 시 강제로 default-target-url 값으로 보내려면  always-use-default-target="true"으로 속성을 추가하면 된다. 
+		<!-- login-processing-url은 로그인을 처리하기 위해 지정하는 url로 default 값은 /login
+				로그인 성공 시 강제로 default-target-url 값으로 보내려면  always-use-default-target="true"으로 속성을 추가하면 된다. 
 				default값은 false 인데 그 상황은 로그인이  성공했을 시 권한이 필요했던 페이지로 이동한다(원래 이동 하려던 페이지로 이동). -->
 		<form-login 
 				username-parameter="loginId" 
@@ -34,18 +35,40 @@
 				default-target-url="/"
 				authentication-failure-url="/login?fail=true"	/>
 		
+		<!-- logout-url은 로그아웃을 처리하기 위한 url이다. default값도 /logout, 
+				csrf값과 함꼐 같이 포스트 방식으로 전달 받아야 되는거 같은데, 설명에는 그냥 get방식으로 받아버리네 좀 더 확인필요 
+				별도로 더 지워야 할 쿠기가 있으면 ,를 구분자로 여러개의 쿠키 이름 지정 -->
+		<logout 
+			logout-url="logout"
+			logout-success-url="/"
+			delete-cookies="JSESSIONID"	/>
 		<csrf />
+		
 	</http>
 	
 	
-	<authentication-manager>
+	<!-- <authentication-manager>
 		<authentication-provider>
 			<user-service>
 				<user name="user" password="user" authorities="ROLE_USER" />
 				<user name="admin" password="admin" authorities="ROLE_ADMIN" />
 			</user-service>
 		</authentication-provider>
+	</authentication-manager> -->
+	
+	<authentication-manager>
+		<authentication-provider user-service-ref="customJdbcDAOImpl" />
 	</authentication-manager>
+	
+	<b:bean id="customJdbcDAOImpl" class="com.berlizz.domain.CustomJdbcDAOImpl">
+		<b:property name="dataSource" ref="dataSource" />
+		<b:property name="rolePrefix" value="ROLE_" />
+		<b:property name="usersByUsernameQuery" value="select ID, PASSWORD, NAME from MEMBERINFO where ID = ?" />
+		<b:property name="authoritiesByUsernameQuery" value="select AUTHORITY from MEMBER_AUTHORITY where ID =?" />
+		<b:property name="enableGroups" value="false" />
+	</b:bean>
+	<!-- rolePrefix default값은 "ROLE_" -->
+	
 	
 	
 </b:beans>
