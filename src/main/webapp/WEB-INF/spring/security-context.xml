@@ -24,22 +24,30 @@
 		
 		<!-- custom 로그인 페이지 지정 -->
 		<!-- username-parameter 값을 줘서 아이디값을 입력하는 input태그의 name 속성을 j_username으로 사용하지 않아도 된다(임의로 name지정 가능). 패스워드도 마찬가지  -->
-		<!-- login-processing-url은 로그인을 처리하기 위해 지정하는 url로 default 값은 /login
-				로그인 성공 시 강제로 default-target-url 값으로 보내려면  always-use-default-target="true"으로 속성을 추가하면 된다. 
-				default값은 false 인데 그 상황은 로그인이  성공했을 시 권한이 필요했던 페이지로 이동한다(원래 이동 하려던 페이지로 이동). -->
+		<!-- 
+			login-processing-url은 로그인을 처리하기 위해 지정하는 url로 default 값은 /login
+			로그인 성공 시 강제로 default-target-url 값으로 보내려면  always-use-default-target="true"으로 속성을 추가하면 된다. 
+			default값은 false 인데 그 상황은 로그인이  성공했을 시 권한이 필요했던 페이지로 이동한다(원래 이동 하려던 페이지로 이동). 
+			authentication-failure-url="/login?fail=true"속성은 authentication-failure-handler-ref 추가 후 제외 
+		-->
 		<form-login 
 				username-parameter="loginId" 
 				password-parameter="loginPw"
 				login-processing-url="/loginCheck"
 				login-page="/login"
 				default-target-url="/"
-				authentication-failure-url="/login?fail=true"	/>
+				authentication-success-handler-ref="customAuthenticationSuccessHandler"
+				authentication-failure-handler-ref="customAuthenticationFailureHandler"	/>
+				
+	
 		
-		<!-- logout-url은 로그아웃을 처리하기 위한 url이다. default값도 /logout, 
-				csrf값과 함꼐 같이 포스트 방식으로 전달 받아야 되는거 같은데, 설명에는 그냥 get방식으로 받아버리네 좀 더 확인필요 
-				별도로 더 지워야 할 쿠기가 있으면 ,를 구분자로 여러개의 쿠키 이름 지정 -->
+		<!-- 
+			logout-url은 로그아웃을 처리하기 위한 url이다. default값도 /logout, 
+			csrf값과 함꼐 같이 포스트 방식으로 전달 받아야 되는거 같은데, 설명에는 그냥 get방식으로 받아버리네 좀 더 확인필요 
+			별도로 더 지워야 할 쿠기가 있으면 ,를 구분자로 여러개의 쿠키 이름 지정 
+		-->
 		<logout 
-			logout-url="logout"
+			logout-url="/logout"
 			logout-success-url="/"
 			delete-cookies="JSESSIONID"	/>
 		<csrf />
@@ -68,6 +76,30 @@
 		<b:property name="enableGroups" value="false" />
 	</b:bean>
 	<!-- rolePrefix default값은 "ROLE_" -->
+	
+	
+	<!-- 
+		로그인 성공 시 부가적인 작업을 하기 위한 클래스 빈 등록
+		targetUrlParameter 는 로그인 성공한 뒤 이동할 화면 url이 들어있는 파라미터 이름을 지정
+		
+	-->
+	<b:bean id="customAuthenticationSuccessHandler" class="com.berlizz.domain.CustomAuthenticationSuccessHandler">
+		<b:property name="targetUrlParameter" value="loginRedirect" />
+		<b:property name="useReferer" value="false" />
+		<b:property name="defaultUrl" value="/" />
+	</b:bean>
+	
+	
+	<!-- 
+		로그인 실패 시 부가적인 작업을 하기 위한 클래스 빈 등록
+	 -->
+	 <b:bean id="customAuthenticationFailureHandler" class="com.berlizz.domain.CustomAuthenticationFailureHandler">
+	 	<b:property name="loginIdName" value="loginId" />
+	 	<b:property name="loginPwdName" value="loginPw" />
+	 	<b:property name="loginRedirectName" value="loginRedirect" />
+	 	<b:property name="exceptionMsgName" value="securityExceptionMsg" />
+	 	<b:property name="defaultFailureUrl" value="/login?fail=true" />
+	 </b:bean>
 	
 	
 	

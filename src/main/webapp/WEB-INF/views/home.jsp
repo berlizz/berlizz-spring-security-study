@@ -1,3 +1,5 @@
+<!-- 메인화면에 로그인 폼이 포함되어 있는 상황 -->
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
@@ -48,7 +50,7 @@
 	
 	<sec:authorize access="isAuthenticated()">
 		<%=name%>님 반갑습니다.
-		<form method="post" action="logout">
+		<form method="post" action="/logout">
 			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 			<input type="submit" value="로그아웃">
 			csrf값과 함께 포스트방식으로 전달해야 되는구나
