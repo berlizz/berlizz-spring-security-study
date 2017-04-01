@@ -4,12 +4,17 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import javax.inject.Inject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * Handles requests for the application home page.
@@ -18,6 +23,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class HomeController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	
+	@Inject
+	private BCryptPasswordEncoder passwordEncoder;
 	
 	/**
 	 * Simply selects the home view to render by returning its name.
@@ -50,5 +58,20 @@ public class HomeController {
 	public void login() throws Exception {
 		logger.info("login()");
 	}
+	
+	
+	
+	@RequestMapping(value = "/passwordEncoder", method = RequestMethod.GET)
+	public void passwordEncoder(@RequestParam(value = "targetStr", required = false, defaultValue = "") String targetStr, Model model) {
+		logger.info("passwordEncoder");
+		
+		if(StringUtils.hasText(targetStr)) {
+			String bCryptStr = passwordEncoder.encode(targetStr);
+			model.addAttribute("targetStr", targetStr);
+			model.addAttribute("bCryptStr", bCryptStr);
+		}
+	}
+	
+	
 	
 }

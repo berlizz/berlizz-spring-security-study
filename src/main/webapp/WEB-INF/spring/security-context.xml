@@ -65,7 +65,10 @@
 	</authentication-manager> -->
 	
 	<authentication-manager>
-		<authentication-provider user-service-ref="customJdbcDAOImpl" />
+		<authentication-provider user-service-ref="customJdbcDAOImpl">
+			<!-- bcrypt 방식으로 암호화 위한 설정 -->
+			<password-encoder ref="bcryptPasswordEncoder" />
+		</authentication-provider>
 	</authentication-manager>
 	
 	<b:bean id="customJdbcDAOImpl" class="com.berlizz.domain.CustomJdbcDAOImpl">
@@ -100,6 +103,16 @@
 	 	<b:property name="exceptionMsgName" value="securityExceptionMsg" />
 	 	<b:property name="defaultFailureUrl" value="/login?fail=true" />
 	 </b:bean>
+	 
+	 
+	 <!-- 
+	 	암호화
+	 	bcrypt 방식은 org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder클래스를 빈에 등록하고 
+	 	<password-encoder> 태그에 ref 속성을 이용하여 참조하는 것이 권장되는 방법이다. 그러면 빈 클래스에서 BCryptPasswordEncoder클래스를 주입받아 사용자가 입력한 문자열을
+	 	암호화 한 문자열로 바꿔주는 메소드(passwordEncoder)를 만들어 활용하기 편해진다. (<password-encoder 속성으로 hash="bcrypt"를 입력 하는 방법은 활용도가 떨어짐)
+	 	또한  <password-encoder> 태그에 ref를 이용해 참조하는 방법을 사용할 경우 spring security가 지원하지 않는 암호화 방식에 대한 구현도 가능하다.
+	 -->
+	 <b:bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"></b:bean>
 	
 	
 	
