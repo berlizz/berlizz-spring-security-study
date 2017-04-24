@@ -13,15 +13,20 @@ import org.springframework.security.core.SpringSecurityCoreVersion;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.Assert;
 
+/* 
+ *	계정 클래스 
+ */
 public class MemberInfo implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
 	
-	private String id;
+	// 추가로 필요한 멤버변수들은 다 만들고, getter와 setter 메소드를 만들어두자
+	private String id;			// 사용자 아이디
 	private String password;
-	private String name;
+	private String name;		// 사용자 이름 (추가된 멤버변수)
 	
 	private Set<GrantedAuthority> authorities;
+
 
 	public MemberInfo(String id, String password, String name, Collection<? extends GrantedAuthority> authorities) {
 		this.id = id;
@@ -73,30 +78,35 @@ public class MemberInfo implements UserDetails {
 	}
 	
 	
+	// id 멤버변수의 getter 사용하여 id 리턴
 	@Override
 	public String getUsername() {
 		return getId();
 	}
 	
-	
+	/* 
+	 *	나머지 오버라이드한 메소드 들은 사용하지 않을경우 return true
+	 *	사용해야할 경우 true가 아니라 검사하는 로직을 넣고 그에 맞게 true, false 리턴
+	 */
+	//  계정 만료 여부
 	@Override
 	public boolean isAccountNonExpired() {
 		return true;
 	}
 	
-	
+	// 계정잠김 여부
 	@Override
 	public boolean isAccountNonLocked() {
 		return true;
 	}
 	
-	
+	// 패스워드 만료 여부
 	@Override
 	public boolean isCredentialsNonExpired() {
 		return true;
 	}
 	
-	
+	// 계정 사용가능 여부
 	@Override
 	public boolean isEnabled() {
 		return true;

@@ -1,6 +1,8 @@
 package com.berlizz.domain;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -11,7 +13,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
 	
-	private String loginIdName; // 로그인 id 값이 들어오는 input 태그 name
+	private String loginIdName; 		// 로그인 id 값이 들어오는 input 태그 name(로그인 아이디가 저장되어 있는 파라미터 이름값이 들어옴)
 	private String loginPwdName;
 	private String loginRedirectName;	// 로그인 성공 시 redirect 할 url이 지정되어 있는 input 태그 name
 	private String exceptionMsgName;	// 예외 메시지를 request의 Attribute에 지정할 때 사용 될 key 값
@@ -25,8 +27,12 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 		defaultFailureUrl = "/login?fail=true";
 	}
 
-	// 구현해야하는 메소드는 하나이며, 로그인 실패 시 이 메소드가 실행된다.
-	// 로그인을 실패했을 경우 이므로 3번쨰 인자가 onAuthenticationSueecss에서 인증 정보 객체인 Authentication과 달리 AuthenticationException 클래스 객체가 오게 된다.  
+	/* 
+	 *	구현해야하는 메소드는 하나이며, 로그인 실패 시 이 메소드가 실행된다.
+	 *	로그인을 실패했을 경우 이므로 3번쨰 인자가 onAuthenticationSueecss에서 인증 정보 객체인 Authentication과 달리 
+	 *	AuthenticationException 클래스 객체가 오게 된다.  
+	 *	AuthencationException에는 로그인이 어떤 이유로 실패했는지에 대한 정보가 들어있다.
+	*/
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException exception) throws IOException, ServletException {

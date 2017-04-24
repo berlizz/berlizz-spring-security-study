@@ -32,7 +32,10 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 		useReferer = false;
 	}
 
-	// 구현해야할 메소드는 이거 하나밖에 없고, 로그인 성공 시 이 메소드를 실행하게 된다
+	/* 
+	 *	구현해야할 메소드는 이거 하나밖에 없고, 로그인 성공 시 이 메소드를 실행하게 된다
+	 *	Authentication객체를 받으므로 사용자 정보를 가져올 수 있다.
+	 */
 	@Override 
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
 			throws IOException, ServletException {
